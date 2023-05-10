@@ -16,6 +16,7 @@ services:
       - "8000:80"
     volumes:
       - wp-data:/var/www/html
+      - ./Fichier/wordpress/themes:/var/www/html/wp-content/themes
     depends_on:
       - db
     environment:
