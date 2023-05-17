@@ -2,50 +2,77 @@ version: '3'
 
 services:
   db:
-    build: ./Fichiers/mysql
+    build:
+      context: ./Fichiers/Dockerfiles/mysql
+      dockerfile: Dockerfile.mysql
+    container_name: mengisen-projetdocker-mysql-server
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    expose:
+      - 3306
+      - 33060
+    command: sh -c "chmod 777 /run/mysqld/mysqld.pid && exec mysqld"
 
   wordpress:
-    build: ./Fichiers/wordpress
+    build:
+      context: ./Fichiers/Dockerfiles/wordpress
+      dockerfile: Dockerfile.wordpress
+    container_name: mengisen-projetdocker-wordpress
     ports:
       - "8000:80"
     volumes:
-      # - wp-data:/var/www/html
       - ./Fichiers/wordpress/themes:/var/www/html/wp-content/themes
     depends_on:
       - db
     environment:
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_USER: root
-      WORDPRESS_DB_PASSWORD: root
+      WORDPRESS_DB_HOST: mengisen-projetdocker-mysql-server
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
 
 volumes:
-  # db-data:
-  # wp-data:
-  db-data: {}
+  db-data:
+
+
+
+
+
 
 
 # version: '3'
 
 # services:
 #   db:
-#     image: mariadb:latest
-#     build: ./Fichiers/mysql
+#     build:
+#       context: ./Fichiers/Dockerfiles/mysql
+#       dockerfile: Dockerfile.mysql
+#     container_name: mengisen-projetdocker-mysql-server
 #     ports:
-#       - "3306:3306"
+#       - "3307:3306"
 #     volumes:
 #       - db-data:/var/lib/mysql
 #     environment:
-#       MYSQL_ROOT_PASSWORD: root
+#       MYSQL_ROOT_PASSWORD: wordpress
+#       MYSQL_DATABASE: wordpress
+#       MYSQL_USER: wordpress
+#       MYSQL_PASSWORD: wordpress
+#     # command: '--default-authentication-plugin=mysql_native_password'
+#     expose:
+#       - 3306
+#       - 33060
 
 #   wordpress:
-#     image: wordpress:latest
+#     build:
+#       context: ./Fichiers/Dockerfiles/wordpress
+#       dockerfile: Dockerfile.wordpress
+#     container_name: mengisen-projetdocker-wordpress
 #     ports:
 #       - "8000:80"
 #     volumes:
@@ -53,11 +80,10 @@ volumes:
 #     depends_on:
 #       - db
 #     environment:
-#       WORDPRESS_DB_HOST: db
-#       WORDPRESS_DB_USER: root
-#       WORDPRESS_DB_PASSWORD: root
+#       WORDPRESS_DB_HOST: mengisen-projetdocker-mysql
+#       WORDPRESS_DB_USER: wordpress
+#       WORDPRESS_DB_PASSWORD: wordpress
 #       WORDPRESS_DB_NAME: wordpress
 
 # volumes:
 #   db-data:
-

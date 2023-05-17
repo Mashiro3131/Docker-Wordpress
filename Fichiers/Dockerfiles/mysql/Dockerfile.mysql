@@ -1,0 +1,69 @@
+
+# Home made baby
+
+FROM debian:bullseye-slim
+
+# ENV PATH="/usr/local/bin:${PATH}"
+
+# Installation de mysql server et nettoyage des fichiers inutiles
+RUN sudo apt-get update && \
+    sudo apt upgrade && \
+    sudo apt install wget && \
+    sudo wget https://dev.mysql.com/get/mysql-apt-config_0.8.22-1_all.deb && \
+    sudo apt install ./mysql-apt-config_0.8.22-1_all.deb && \
+    sudo apt update && \
+    sudo apt install mysql-server && \
+    sudo service mysql status && \
+    sudo mysql_secure_installation
+
+
+# Création des dossiers nécessaires pour le bon fonctionnement de mysql
+RUN mkdir -p /var/run/mysqld /run/mysqld
+
+# Configs de mysql
+COPY my.cnf /etc/mysql/my.cnf
+COPY create-db.sql /docker-entrypoint-initdb.d/create-db.sql
+
+# Les bonnes permissions pour éviter les erreurs de démarrage de mysql
+RUN chown -R mysql:mysql /var/lib/mysql /var/run/mysqld \
+    && chmod 777 /etc/mysql/my.cnf \
+    && chmod 777 /docker-entrypoint-initdb.d/create-db.sql \
+    && chmod 777 /var/run/mysqld/mysqld.pid
+
+EXPOSE 3306
+
+CMD ["mysqld"]
+
+
+
+
+
+
+
+# ShitGPT
+
+# FROM debian:bullseye-slim
+
+# # ENV PATH="/usr/local/bin:${PATH}"
+
+# # Installation de mysql server et nettoyage des fichiers inutiles
+# RUN sudo apt-get update && \
+#     sudo apt-get install -y mysql-server && \
+#     sudo rm -rf /var/lib/apt/lists/*
+
+# # Création des dossiers nécessaires pour le bon fonctionnement de mysql
+# RUN mkdir -p /var/run/mysqld /run/mysqld
+
+# # Configs de mysql
+# COPY my.cnf /etc/mysql/my.cnf
+# COPY create-db.sql /docker-entrypoint-initdb.d/create-db.sql
+
+# # Les bonnes permissions pour éviter les erreurs de démarrage de mysql
+# RUN chown -R mysql:mysql /var/lib/mysql /var/run/mysqld \
+#     && chmod 777 /etc/mysql/my.cnf \
+#     && chmod 777 /docker-entrypoint-initdb.d/create-db.sql \
+#     && chmod 777 /var/run/mysqld/mysqld.pid
+
+# EXPOSE 3306
+
+# CMD ["mysqld"]
