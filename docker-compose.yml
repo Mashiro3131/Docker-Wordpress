@@ -18,7 +18,9 @@ services:
     expose:
       - 3306
       - 33060
-    command: sh -c "chmod 777 /run/mysqld/mysqld.pid && exec mysqld"
+    command: 
+    - sh -c "docker build -t mysql-server ."
+    - sh -c "chmod 777 /run/mysqld/mysqld.pid && exec mysqld"
 
   wordpress:
     build:
