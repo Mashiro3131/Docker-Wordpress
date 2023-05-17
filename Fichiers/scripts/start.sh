@@ -1,5 +1,7 @@
 #!/bin/bash
 
+chmod +x "$0"
+
 # Check if MySQL server image is already built
 if ! docker images -q mysql-server:latest >/dev/null 2>&1; then
   # Build MySQL server image
