@@ -1,0 +1,58 @@
+FROM debian:bullseye
+
+ENV DEBIAN_FRONTEND noninteractive
+
+##########################################
+#                                        #
+#      Installation de Apapche           #
+#                                        #
+##########################################
+RUN apt-get update && apt-get install -y \
+    apache2 \
+    php \
+    libapache2-mod-php \
+    php-mysql \
+    php-gd \
+    php-curl \
+    php-json \
+    wget \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN a2enmod rewrite
+
+
+
+
+
+##########################################
+#                                        #
+#               Config                   #
+#                                        #
+##########################################
+
+# va chercher le fichier de config de wordpress
+COPY config/wp-config.php /var/www/html/wp-config.php
+# va chercher le fichier de création de la base de données
+COPY create-db.sql /docker-entrypoint-initdb.d/
+# va chercher le template wordpress
+COPY themes /var/www/html/wp-content/themes
+
+
+
+
+##########################################
+#                                        #
+#      Installation de Wordpress         #
+#                                        #
+##########################################
+
+# sépécifie le dossier de travail wordpress
+WORKDIR /var/www/html
+# install wordpress
+RUN wget -O wordpress.tar.gz https://wordpress.org/latest.tar.gz && \
+    tar -xzf wordpress.tar.gz && \
+    rm -rf wordpress.tar.gz
+
+EXPOSE 80
+
+CMD ["apache2ctl", "-D", "FOREGROUND"]
