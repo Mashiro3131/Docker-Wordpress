@@ -21,7 +21,11 @@ RUN apt-get update && \
     dpkg -i mysql-apt-config_0.8.24-1_all.deb && \
     apt update && \
     apt install mysql-server -y && \
-    apt install mysql-client -y
+    apt install mysql-client -y && \
+    apt install mysql-common -y && \
+    apt install mysql-utilities -y && \
+    apt-get update && \
+
 
 
 RUN command -v mysql && \
