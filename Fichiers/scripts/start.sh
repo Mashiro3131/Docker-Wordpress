@@ -2,35 +2,23 @@
 
 chmod +x "$0"
 
-# Check if MySQL server image is already built
-if ! docker images -q mysql-server:latest >/dev/null 2>&1; then
-  # Build MySQL server image
-  docker build -t mysql-server ./Fichiers/Dockerfiles/mysql
-fi
-
-# Check if WordPress image is already built
-if ! docker images -q wordpress-server:latest >/dev/null 2>&1; then
-  # Build WordPress image
-  docker build -t wordpress-server ./Fichiers/Dockerfiles/wordpress
-fi
-
 # Start containers
-docker-compose up -d
+docker-compose up -d --build
 
 # Start stopped containers
 docker-compose start
 
-# Wait for a while before displaying logs and running containers
-sleep 10
+# # Wait for a while before displaying logs and running containers
+# sleep 10
 
-# Display logs
-docker-compose logs -f
+# # Display logs
+# docker-compose logs -f
 
-# Show running containers
-docker ps
+# # Show running containers
+# docker ps
 
-# Enter MySQL container
-docker exec -it mengisen-projetdocker-mysql-server bash
+# # Enter MySQL container
+# docker exec -it mengisen-projetdocker-mysql-server bash
 
 
 

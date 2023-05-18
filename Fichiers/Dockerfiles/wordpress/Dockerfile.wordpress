@@ -1,7 +1,5 @@
 FROM debian:bullseye-slim
 
-# ENV DEBIAN_FRONTEND noninteractive
-
 RUN apt-get update && \
     apt-get install -y apache2 php libapache2-mod-php php-mysql php-gd php-curl php-json && \
     apt-get clean && \
@@ -10,6 +8,7 @@ RUN apt-get update && \
 RUN a2enmod rewrite
 
 COPY config/wp-config.php /var/www/html/wp-config.php
+COPY create-db.sql /docker-entrypoint-initdb.d/
 
 EXPOSE 80
 
