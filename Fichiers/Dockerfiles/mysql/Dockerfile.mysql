@@ -1,31 +1,83 @@
-FROM debian:bullseye-slim
+FROM debian:bullseye
 
-# ENV PATH="/usr/local/bin:${PATH}"
+# Utile pour durant l'installation de mysql sans qu'on ait à répondre à des questions
+ENV DEBIAN_FRONTEND noninteractive
 
-# Installation de mysql server et nettoyage des fichiers inutiles
+# Installation de mysql-server
 RUN apt-get update && \
     apt upgrade && \
-    apt install wget - y&& \
-    wget https://dev.mysql.com/get/mysql-apt-config_0.8.22-1_all.deb && \
-    apt install ./mysql-apt-config_0.8.22-1_all.deb && \
+    apt install wget -y && \
+    wget https://dev.mysql.com/get/mysql-apt-config_0.8.24-1_all.deb && \
+    apt install ./mysql-apt-config_0.8.24-1_all.deb -y && \
+    dpkg -i mysql-apt-config_0.8.24-1_all.deb && \
     apt update && \
     apt install mysql-server -y && \
-    service mysql status && \
-    mysql_secure_installation -y
+    apt install mysql-client -y
 
 
-# Création des dossiers nécessaires pour le bon fonctionnement de mysql
-RUN mkdir -p /var/run/mysqld /run/mysqld
+RUN command -v mysql && \
+    command -v mysqld
+
+
 
 # Configs de mysql
 COPY my.cnf /etc/mysql/my.cnf
 COPY create-db.sql /docker-entrypoint-initdb.d/create-db.sql
 
-# Les bonnes permissions pour éviter les erreurs de démarrage de mysql
-RUN chown -R mysql:mysql /var/lib/mysql /var/run/mysqld \
-    && chmod 777 /etc/mysql/my.cnf \
-    && chmod 777 /docker-entrypoint-initdb.d/create-db.sql
-
 EXPOSE 3306
 
 CMD ["mysqld"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# FROM debian:bullseye
+
+# # Utile pour durant l'installation de mysql sans qu'on ait à répondre à des questions
+# ENV DEBIAN_FRONTEND noninteractive
+
+
+# # Installation de mysql-server
+# RUN apt-get update && \
+#     apt upgrade && \
+#     apt install wget -y && \
+#     wget https://dev.mysql.com/get/mysql-apt-config_0.8.24-1_all.deb && \
+#     apt install ./mysql-apt-config_0.8.24-1_all.deb -y && \
+#     dpkg -i mysql-apt-config_0.8.24-1_all.deb && \
+#     apt update && \
+#     apt install mysql-server -y && \
+#     apt install mysql-client -y
+
+
+
+
+# # # Création des dossiers nécessaires pour le bon fonctionnement de mysql
+# # RUN mkdir -p /var/run/mysqld /run/mysqld
+
+# # Configs de mysql
+# COPY my.cnf /etc/mysql/my.cnf
+# COPY create-db.sql /docker-entrypoint-initdb.d/create-db.sql
+
+# # # Les bonnes permissions pour éviter les erreurs de démarrage de mysql
+# # RUN chown -R mysql:mysql /var/lib/mysql /var/run/mysqld \
+# #     && chmod 777 /etc/mysql/my.cnf \
+# #     && chmod 777 /docker-entrypoint-initdb.d/create-db.sql
+
+# EXPOSE 3306
+
+# CMD ["mysqld"]
