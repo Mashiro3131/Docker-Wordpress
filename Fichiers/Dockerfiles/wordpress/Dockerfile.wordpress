@@ -16,15 +16,16 @@ RUN apt-get update && apt-get install -y \
     php-curl \
     php-json \
     wget \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-RUN apt-get update
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    apt-get update
 
 RUN a2enmod rewrite
 
+# Copy the additional Apache configuration file
+COPY ./config/extra-config.conf /etc/apache2/conf-available/extra-config.conf
 
-
-
+# Enable the extra Apache configuration
+RUN ln -s /etc/apache2/conf-available/extra-config.conf /etc/apache2/conf-enabled/extra-config.conf
 
 ##########################################
 #                                        #
@@ -32,15 +33,11 @@ RUN a2enmod rewrite
 #                                        #
 ##########################################
 
-# va chercher le fichier de config de wordpress
+# Copy the WordPress configuration file
 COPY config/wp-config.php /var/www/html/wp-config.php
-# va chercher le fichier de création de la base de données
-COPY create-db.sql /docker-entrypoint-initdb.d/
-# va chercher le template wordpress
-COPY themes /var/www/html/wp-content/themes
 
-
-
+# Copy the theme files
+COPY themes/ctlg-wpcom /var/www/html/wp-content/themes/ctlg-wpcom
 
 ##########################################
 #                                        #
@@ -48,13 +45,105 @@ COPY themes /var/www/html/wp-content/themes
 #                                        #
 ##########################################
 
-# sépécifie le dossier de travail wordpress
+# Specify the WordPress working directory
 WORKDIR /var/www/html
-# install wordpress
+
+# Install WordPress
 RUN wget -O wordpress.tar.gz https://wordpress.org/latest.tar.gz && \
     tar -xzf wordpress.tar.gz && \
     rm -rf wordpress.tar.gz
 
+# Set up database environment variables
+ENV WORDPRESS_DB_HOST mengisen-projetdocker-mysql-server
+ENV WORDPRESS_DB_USER wordpress
+ENV WORDPRESS_DB_PASSWORD wordpress
+ENV WORDPRESS_DB_NAME wordpress
+
+# Installe des editeur de texte
+RUN apt-get install vim -y && \
+    apt-get install nano -y
+
+# Supprime le fichier index.html par défaut
+RUN rm -rf /var/www/html/index.html
+
 EXPOSE 80
 
 CMD ["apache2ctl", "-D", "FOREGROUND"]
+
+
+
+
+
+
+
+
+# FROM debian:bullseye
+
+# ENV DEBIAN_FRONTEND noninteractive
+
+# ##########################################
+# #                                        #
+# #      Installation de Apapche           #
+# #                                        #
+# ##########################################
+# RUN apt-get update && apt-get install -y \
+#     apache2 \
+#     php \
+#     libapache2-mod-php \
+#     php-mysql \
+#     php-gd \
+#     php-curl \
+#     php-json \
+#     wget \
+#     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+#     apt-get install vim -y && \
+#     apt-get install nano -y && \
+#     apt-get update
+
+# RUN a2enmod rewrite
+
+
+# # Copy the additional Apache configuration file
+# COPY ./config/extra-config.conf /etc/apache2/conf-available/extra-config.conf
+
+# # Enable the extra Apache configuration
+# RUN ln -s /etc/apache2/conf-available/extra-config.conf /etc/apache2/conf-enabled/extra-config.conf
+
+
+
+
+
+# ##########################################
+# #                                        #
+# #               Config                   #
+# #                                        #
+# ##########################################
+
+# # va chercher le fichier de config de wordpress
+# COPY config/wp-config.php /var/www/html/wp-config.php
+# # va chercher le fichier de création de la base de données
+# COPY create-db.sql /docker-entrypoint-initdb.d/
+# # va chercher le template wordpress
+# COPY themes /var/www/html/wp-content/themes
+
+
+
+
+# ##########################################
+# #                                        #
+# #      Installation de Wordpress         #
+# #                                        #
+# ##########################################
+
+# # sépécifie le dossier de travail wordpress
+# WORKDIR /var/www/html
+# # install wordpress
+# RUN wget -O wordpress.tar.gz https://wordpress.org/latest.tar.gz && \
+#     tar -xzf wordpress.tar.gz && \
+#     rm -rf wordpress.tar.gz
+
+# RUN rm -rf /var/www/html/index.html
+
+# EXPOSE 80
+
+# CMD ["apache2ctl", "-D", "FOREGROUND"]

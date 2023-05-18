@@ -26,14 +26,16 @@ services:
       dockerfile: Dockerfile.wordpress
     container_name: mengisen-projetdocker-wordpress
     image: mengisen-projetdocker-wordpress-image
+    depends_on:
+      - mengisen-projetdocker-mysql-server
     ports:
       - "8000:80"
     volumes:
-      - ./Fichiers/wordpress/themes:/var/www/html/wp-content/themes
-    depends_on:
-      - mengisen-projetdocker-mysql-server
+      - ./Fichiers/Dockerfiles/wordpress/config/wp-config.php:/var/www/html/wp-config.php
+      - ./Fichiers/Dockerfiles/wordpress/themes/ctlg-wpcom:/var/www/html/wp-content/themes/ctlg-wpcom
+    restart: always
     environment:
-      WORDPRESS_DB_HOST: mengisen-projetdocker-mysql-server
+      WORDPRESS_DB_HOST: mengisen-projetdocker-mysql-server:3306
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
@@ -44,13 +46,130 @@ volumes:
 
 
 
+##########################################
+#                                        #
+#                  OLD v3                #
+#                                        #
+##########################################
+
+# version: '3'
+
+# services:
+#   mengisen-projetdocker-mysql-server:
+#     build:
+#       context: ./Fichiers/Dockerfiles/mysql
+#       dockerfile: Dockerfile.mysql
+#     container_name: mengisen-projetdocker-mysql-server
+#     image: mengisen-projetdocker-mysql-image
+#     ports:
+#       - "3307:3306"
+#     volumes:
+#       - db-data:/var/lib/mysql
+#     environment:
+#       MYSQL_ROOT_PASSWORD: wordpress
+#       MYSQL_DATABASE: wordpress
+#       MYSQL_USER: wordpress
+#       MYSQL_PASSWORD: wordpress
+#     expose:
+#       - 3306
+#       - 33060
+
+#   mengisen-projetdocker-wordpress:
+#     build:
+#       context: ./Fichiers/Dockerfiles/wordpress
+#       dockerfile: Dockerfile.wordpress
+    
+#     container_name: mengisen-projetdocker-wordpress
+#     image: mengisen-projetdocker-wordpress-image
+#     depends_on:
+#       - mengisen-projetdocker-mysql-server
+    
+#     ports:
+#       - "8000:80"
+#     volumes:
+#       - ./Fichiers/wordpress/themes/ctlg-wpcom:/var/www/html/wp-content/themes/ctlg-wpcom
+
+#     restart: always
+    
+#     environment:
+#       WORDPRESS_DB_HOST: mengisen-projetdocker-mysql-server:3306
+#       WORDPRESS_DB_USER: wordpress
+#       WORDPRESS_DB_PASSWORD: wordpress
+#       WORDPRESS_DB_NAME: wordpress
+
+# volumes:
+#   db-data:
+
 
 
 
 
 ##########################################
 #                                        #
-#                  OLD                   #
+#                  OLD v2                #
+#                                        #
+##########################################
+
+
+
+# version: '3'
+
+# services:
+#   mengisen-projetdocker-mysql-server:
+#     build:
+#       context: ./Fichiers/Dockerfiles/mysql
+#       dockerfile: Dockerfile.mysql
+#     container_name: mengisen-projetdocker-mysql-server
+#     image: mengisen-projetdocker-mysql-image
+#     ports:
+#       - "3307:3306"
+#     volumes:
+#       - db-data:/var/lib/mysql
+#     environment:
+#       MYSQL_ROOT_PASSWORD: wordpress
+#       MYSQL_DATABASE: wordpress
+#       MYSQL_USER: wordpress
+#       MYSQL_PASSWORD: wordpress
+#     expose:
+#       - 3306
+#       - 33060
+
+#   mengisen-projetdocker-wordpress:
+#     build:
+#       context: ./Fichiers/Dockerfiles/wordpress
+#       dockerfile: Dockerfile.wordpress
+    
+#     container_name: mengisen-projetdocker-wordpress
+#     image: mengisen-projetdocker-wordpress-image
+#     depends_on:
+#       - mengisen-projetdocker-mysql-server
+    
+#     ports:
+#       - "8000:80"
+#     volumes:
+#       - ./Fichiers/Dockerfiles/wordpress/themes:/var/www/html/wp-content/themes
+
+#     restart: always
+    
+#     environment:
+#       WORDPRESS_DB_HOST: mengisen-projetdocker-mysql-server:3306
+#       WORDPRESS_DB_USER: wordpress
+#       WORDPRESS_DB_PASSWORD: wordpress
+#       WORDPRESS_DB_NAME: wordpress
+
+# volumes:
+#   db-data:
+
+
+
+
+
+
+
+
+##########################################
+#                                        #
+#                  OLD v1                #
 #                                        #
 ##########################################
 

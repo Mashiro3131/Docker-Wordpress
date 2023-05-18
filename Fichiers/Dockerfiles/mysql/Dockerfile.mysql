@@ -28,7 +28,7 @@ RUN command -v mysql && \
 COPY my.cnf /etc/mysql/my.cnf
 COPY create-db.sql /docker-entrypoint-initdb.d/create-db.sql
 
-EXPOSE 3306
+EXPOSE 3306 33060
 
 CMD ["mysqld"]
 
