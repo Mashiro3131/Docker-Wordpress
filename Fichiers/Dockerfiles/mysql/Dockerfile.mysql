@@ -5,35 +5,26 @@ ENV DEBIAN_FRONTEND noninteractive
 
 
 
-##########################################
-#                                        #
-#     Installation de MySQL Server       #
-#                                        #
-##########################################
 
-
+# ##########################################
+# #                                        #
+# #     Installation de MySQL Server       #
+# #                                        #
+# ##########################################
 
 RUN apt-get update && \
-    apt upgrade && \
-    apt install wget -y && \
+    apt-get install -y wget && \
     wget https://dev.mysql.com/get/mysql-apt-config_0.8.24-1_all.deb && \
     apt install ./mysql-apt-config_0.8.24-1_all.deb -y && \
     dpkg -i mysql-apt-config_0.8.24-1_all.deb && \
-    apt update && \
-    apt install mysql-server -y && \
-    apt install mysql-client -y && \
-    apt install mysql-common -y && \
-    apt install mysql-utilities -y && \
+    apt-get update && \
+    apt-get install -y mysql-server && \
+    apt-get install -y mysql-client && \
     apt-get update
-
-
 
 RUN command -v mysql && \
     command -v mysqld
 
-
-
-# Configs de mysql
 COPY my.cnf /etc/mysql/my.cnf
 COPY create-db.sql /docker-entrypoint-initdb.d/create-db.sql
 
