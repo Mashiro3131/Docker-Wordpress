@@ -3,7 +3,16 @@ FROM debian:bullseye
 # Utile pour durant l'installation de mysql sans qu'on ait à répondre à des questions
 ENV DEBIAN_FRONTEND noninteractive
 
-# Installation de mysql-server
+
+
+##########################################
+#                                        #
+#     Installation de MySQL Server       #
+#                                        #
+##########################################
+
+
+
 RUN apt-get update && \
     apt upgrade && \
     apt install wget -y && \
