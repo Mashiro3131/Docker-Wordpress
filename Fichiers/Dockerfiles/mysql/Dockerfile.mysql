@@ -11,7 +11,7 @@ RUN apt-get update && \
     apt update && \
     apt install mysql-server -y && \
     service mysql status && \
-    mysql_secure_installation
+    mysql_secure_installation -y
 
 
 # Création des dossiers nécessaires pour le bon fonctionnement de mysql
