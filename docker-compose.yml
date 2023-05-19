@@ -1,31 +1,32 @@
 version: '3'
 
 services:
+
+ # MySQL
   mysql:
+    # networks:
+    #  - back
     build:
       context: ./Fichiers/Dockerfiles/mysql
       dockerfile: Dockerfile.mysql
-
     volumes:
       - mysql-data:/var/lib/mysql
-      # - ./Fichiers/Dockerfiles/mysql/create-db.sql:/docker-entrypoint-initdb.d/create-db.sql <---
-
     container_name: mengisen-projetdocker-mysql-server
-
-    # image: mengisen-projetdocker-mysql-image
-
     # restart: unless-stopped
-
     ports:
       - "3308:3306"
-
     environment:
       MYSQL_ROOT_PASSWORD: rootpress
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
 
+
+# Wordpress
+
   wordpress:
+    # networks:
+    #   - back
     depends_on:
       - mysql
     build:
@@ -41,60 +42,10 @@ services:
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
-      
+
+# networks:
+#   back:
+
 volumes:
   mysql-data: {}
 
-
-# version: '3'
-
-# services:
-#   mysql:
-#     build:
-#       context: ./Fichiers/Dockerfiles/mysql
-#       dockerfile: Dockerfile.mysql
-
-#     volumes:
-#       - mysql-data:/var/lib/mysql
-#       # - ./Fichiers/Dockerfiles/mysql/create-db.sql:/docker-entrypoint-initdb.d/create-db.sql <---
-
-#     container_name: mengisen-projetdocker-mysql-server
-
-#     # image: mengisen-projetdocker-mysql-image
-
-#     restart: unless-stopped
-
-#     ports:
-#       - "3307:3306"
-
-#     environment:
-#       MYSQL_ROOT_PASSWORD: rootpress
-#       MYSQL_DATABASE: wordpress
-#       MYSQL_USER: wordpress
-#       MYSQL_PASSWORD: wordpress
-
-# wordpress:
-#   depends_on:
-#     - mysql
-#   build:
-#     context: ./Fichiers/Dockerfiles/wordpress
-#     dockerfile: Dockerfile.wordpress
-#   container_name: mengisen-projetdocker-wordpress
-#   ports:
-#     - "8000:80"
-#   restart: always
-#   environment:
-#     WORDPRESS_DB_HOST: mengisen-projetdocker-mysql-server
-#     WORDPRESS_DB_USER: wordpress
-#     WORDPRESS_DB_PASSWORD: wordpress
-#     WORDPRESS_DB_NAME: wordpress
-
-      
-# volumes:
-#   mysql-data: {}
-
-
-
-#     # volumes:
-#     #   # # - ./Fichiers/Dockerfiles/wordpress/config/wp-config.php:/var/www/html/wp-config.php    <-----
-#     #   # - ./Fichiers/Dockerfiles/wordpress/themes:/var/www/html/wp-content/themes
