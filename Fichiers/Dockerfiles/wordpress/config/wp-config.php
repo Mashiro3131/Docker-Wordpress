@@ -1,28 +1,39 @@
 <?php
 
-define('DB_NAME', 'wordpress');
+# Database configuration
 
-define('DB_USER', 'nico');
-define('DB_PASSWORD', 'wp');
+define( 'DB_NAME', 'wordpress' );
+define( 'DB_USER', 'wordpress' );
+define( 'DB_PASSWORD', 'wordpress' );
+define( 'DB_HOST', 'mysql:3306' );
 
-define('DB_Port', '3308');
 
-define('DB_ROOT_USER', 'root');
-define("DB_ROOT_PASSWORD", "wp");
+// # Security keys
 
-define('DB_HOST', 'mengisen-projetdocker-mysql-server');
+// define( 'AUTH_KEY',         'put your unique phrase here' );
+// define( 'SECURE_AUTH_KEY',  'put your unique phrase here' );
+// define( 'LOGGED_IN_KEY',    'put your unique phrase here' );
+// define( 'NONCE_KEY',        'put your unique phrase here' );
+// define( 'AUTH_SALT',        'put your unique phrase here' );
 
-define('DB_CHARSET', 'utf8mb4');
-define('DB_COLLATE', '');
-define('WP_DEBUG', true);
+// # Table prefix
 
-define('WP_CONTENT_DIR', '/var/www/html/wp-content');
-define('WP_CONTENT_URL', 'http://localhost/wp-content');
+// $table_prefix = 'wp_';
 
-define('WP_SITEURL', 'http://localhost');
-define('WP_HOME', 'http://localhost');
+// # Debug mode
 
-define('WP_DEFAULT_THEME', 'ctlg-wpcom');
+// define( 'WP_DEBUG', false );
 
-define('TEMPLATEPATH', '/var/www/html/wp-content/themes/ctlg-wpcom/templates');
-define('STYLESHEETPATH', '/var/www/html/wp-content/themes/ctlg-wpcom/styles');
+// # Absolute path to the WordPress directory
+
+// if ( ! defined( 'ABSPATH' ) ) {
+//     define( 'ABSPATH', __DIR__ . '/' );
+// }
+
+// # Sets up WordPress vars and included files
+
+// require_once ABSPATH . 'wp-settings.php';
+
+// // Path: Fichiers\Dockerfiles\wordpress\docker-compose.yml
+
+

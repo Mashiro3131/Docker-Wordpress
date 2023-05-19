@@ -1,42 +1,100 @@
 version: '3'
 
 services:
-  mengisen-projetdocker-mysql-server:
+  mysql:
     build:
       context: ./Fichiers/Dockerfiles/mysql
       dockerfile: Dockerfile.mysql
-    container_name: mengisen-projetdocker-mysql-server
-    image: mengisen-projetdocker-mysql-image
-    ports:
-      - "3307:3306"
+
     volumes:
-      - db-data:/var/lib/mysql
-      - ./Fichiers/Dockerfiles/mysql/create-db.sql:/docker-entrypoint-initdb.d/create-db.sql
+      - mysql-data:/var/lib/mysql
+      # - ./Fichiers/Dockerfiles/mysql/create-db.sql:/docker-entrypoint-initdb.d/create-db.sql <---
+
+    container_name: mengisen-projetdocker-mysql-server
+
+    # image: mengisen-projetdocker-mysql-image
+
+    # restart: unless-stopped
+
+    ports:
+      - "3308:3306"
+
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: rootpress
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
 
-  mengisen-projetdocker-wordpress:
+  wordpress:
+    depends_on:
+      - mysql
     build:
       context: ./Fichiers/Dockerfiles/wordpress
       dockerfile: Dockerfile.wordpress
     container_name: mengisen-projetdocker-wordpress
-    image: mengisen-projetdocker-wordpress-image
-    depends_on:
-      - mengisen-projetdocker-mysql-server
+    # image: mengisen-projetdocker-wordpress-image
     ports:
-      - "8000:80"
-    volumes:
-      - ./Fichiers/Dockerfiles/wordpress/config/wp-config.php:/var/www/html/wp-config.php
-      - ./Fichiers/Dockerfiles/wordpress/themes/ctlg-wpcom:/var/www/html/wp-content/themes/ctlg-wpcom
+      - "8080:80"
     restart: always
     environment:
-      WORDPRESS_DB_HOST: mengisen-projetdocker-mysql-server:3306
+      WORDPRESS_DB_HOST: mysql:3306
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
-
+      
 volumes:
-  db-data:
+  mysql-data: {}
+
+
+# version: '3'
+
+# services:
+#   mysql:
+#     build:
+#       context: ./Fichiers/Dockerfiles/mysql
+#       dockerfile: Dockerfile.mysql
+
+#     volumes:
+#       - mysql-data:/var/lib/mysql
+#       # - ./Fichiers/Dockerfiles/mysql/create-db.sql:/docker-entrypoint-initdb.d/create-db.sql <---
+
+#     container_name: mengisen-projetdocker-mysql-server
+
+#     # image: mengisen-projetdocker-mysql-image
+
+#     restart: unless-stopped
+
+#     ports:
+#       - "3307:3306"
+
+#     environment:
+#       MYSQL_ROOT_PASSWORD: rootpress
+#       MYSQL_DATABASE: wordpress
+#       MYSQL_USER: wordpress
+#       MYSQL_PASSWORD: wordpress
+
+# wordpress:
+#   depends_on:
+#     - mysql
+#   build:
+#     context: ./Fichiers/Dockerfiles/wordpress
+#     dockerfile: Dockerfile.wordpress
+#   container_name: mengisen-projetdocker-wordpress
+#   ports:
+#     - "8000:80"
+#   restart: always
+#   environment:
+#     WORDPRESS_DB_HOST: mengisen-projetdocker-mysql-server
+#     WORDPRESS_DB_USER: wordpress
+#     WORDPRESS_DB_PASSWORD: wordpress
+#     WORDPRESS_DB_NAME: wordpress
+
+      
+# volumes:
+#   mysql-data: {}
+
+
+
+#     # volumes:
+#     #   # # - ./Fichiers/Dockerfiles/wordpress/config/wp-config.php:/var/www/html/wp-config.php    <-----
+#     #   # - ./Fichiers/Dockerfiles/wordpress/themes:/var/www/html/wp-content/themes
