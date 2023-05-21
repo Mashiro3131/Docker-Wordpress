@@ -29,22 +29,3 @@ docker-compose exec mysql mysql -u root -prootpress -e "GRANT ALL PRIVILEGES ON 
 docker-compose exec mysql mysql -u root -prootpress -e "FLUSH PRIVILEGES;"
 
 echo "WordPress tourne sur http://127.0.0.1:8080"
-
-
-
-# APACHE
-
-# # Check if ServerName is already set in apache2.conf
-# if grep -q "ServerName" /etc/apache2/apache2.conf; then
-#     echo "ServerName est déjà configuré dans apache2.conf"
-# else
-#     echo "Avec l'age vient la sagesse, maintenant faut attendre que le conteneur wordpress soit prêt..."
-#     while ! docker-compose logs wordpress | grep -q "WordPress installation complete"; do
-#         sleep 1
-#     done
-
-#     echo "Adding ServerName to apache2.conf"
-#     add_servername
-# fi
-
-# service apache2 restart
