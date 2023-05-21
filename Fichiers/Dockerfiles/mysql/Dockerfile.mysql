@@ -22,19 +22,16 @@ RUN apt-get update && \
 RUN command -v mysql && \
     command -v mysqld
 
-
 COPY my.cnf /etc/mysql/my.cnf
-# COPY create-db.sql /docker-entrypoint-initdb.d/create-db.sql
 
+# COPY init.sql /docker-entrypoint-initdb.d/init.sql
 
-ENV MYSQL_ROOT_PASSWORD: rootpress
-ENV MYSQL_DATABASE: wordpress
-ENV MYSQL_USER: wordpress
-ENV MYSQL_PASSWORD: wordpress
+ENV MYSQL_ROOT_PASSWORD rootpress
+ENV MYSQL_DATABASE wordpress
+ENV MYSQL_USER wordpress
+ENV MYSQL_PASSWORD wordpress
 
-
-
-EXPOSE 3306 33060
+EXPOSE 3306
+# EXPOSE 3306 33060
 
 CMD ["mysqld"]
-

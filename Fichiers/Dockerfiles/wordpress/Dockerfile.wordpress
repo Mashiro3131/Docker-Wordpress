@@ -2,8 +2,6 @@ FROM debian:bullseye
 
 ENV DEBIAN_FRONTEND noninteractive
 
-
-
 ##########################################
 #                                        #
 #      Installation de Apapche           #
@@ -21,12 +19,18 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     apt-get update
 
+RUN command -v php && \
+    command -v apache2
 
+# RUN apache2 restart
 
 RUN a2enmod rewrite
 
+# Copy the additional Apache configuration file
+# COPY ./config/extra-config.conf /etc/apache2/conf-available/extra-config.conf
 
-
+# Enable the extra Apache configuration
+# RUN ln -s /etc/apache2/conf-available/extra-config.conf /etc/apache2/conf-enabled/extra-config.conf
 
 ##########################################
 #                                        #
@@ -34,37 +38,29 @@ RUN a2enmod rewrite
 #                                        #
 ##########################################
 
-# # Ajout d'une configuration supplémentaire à Apache qui dans ce cas était pour le ServerName
-# COPY ./config/extra-config.conf /etc/apache2/conf-available/extra-config.conf
-
-# # Permet d'ajouter un fichier de configuration supplémentaire à Apache
-# RUN ln -s /etc/apache2/conf-available/extra-config.conf /etc/apache2/conf-enabled/extra-config.conf
-
-
-
 # Copy the WordPress configuration file
 COPY config/wp-config.php /var/www/html/wp-config.php
 
 # Copy the theme files
 COPY themes/ctlg-wpcom /var/www/html/wp-content/themes/ctlg-wpcom
 
+# Set the correct permissions
+# RUN chmod -R 755 /var/www/html
+
 ##########################################
 #                                        #
 #      Installation de Wordpress         #
 #                                        #
 ##########################################
-# Ajout des variables d'environnement pour la base de données qui seront utilisées dans le fichier wp-config.php
+# Set up database environment variables
 ENV WORDPRESS_DB_HOST mengisen-projetdocker-mysql-server
 ENV WORDPRESS_DB_USER wordpress
 ENV WORDPRESS_DB_PASSWORD wordpress
 ENV WORDPRESS_DB_NAME wordpress
 
-
-
-# Installer editeurs de texte favoris pour le CLI si besoin
-RUN apt-get install vim -y && \
-    apt-get install nano -y
-
+# Install text editors
+# RUN apt-get install vim -y && \
+#     apt-get install nano -y
 
 
 # Install WordPress
@@ -73,95 +69,23 @@ RUN wget -O /tmp/latest.tar.gz https://wordpress.org/latest.tar.gz && \
     rm /tmp/latest.tar.gz && \
     apt-get update
 
-
-
 # Set the correct ownership and permissions for WordPress files
 RUN chown -R www-data:www-data /var/www/html && \
     chmod -R 755 /var/www/html
 
-
-
 RUN rm -rf /var/www/html/index.html
 
 
+##########################################
+#                                        #
+#       Installation de php-MySQL        #    
+#                                        #
+##########################################
+
+RUN apt-get install -y php-mysql && \
+    apt-get update
 
 EXPOSE 80
 
-
-
 CMD ["apache2ctl", "-D", "FOREGROUND"]
 
-
-
-
-
-
-
-
-
-
-
-# FROM debian:bullseye
-
-# ENV DEBIAN_FRONTEND noninteractive
-
-# ##########################################
-# #                                        #
-# #      Installation de Apapche           #
-# #                                        #
-# ##########################################
-# RUN apt-get update && apt-get install -y \
-#     apache2 \
-#     php \
-#     libapache2-mod-php \
-#     php-mysql \
-#     php-gd \
-#     php-curl \
-#     php-json \
-#     wget \
-#     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-#     apt-get update
-
-# RUN a2enmod rewrite
-
-# # Enable the extra Apache configuration
-# RUN ln -s /etc/apache2/conf-available/extra-config.conf /etc/apache2/conf-enabled/extra-config.conf
-
-# # Copy the additional Apache configuration file
-# COPY ./config/extra-config.conf /etc/apache2/conf-available/extra-config.conf
-# ##########################################
-# #                                        #
-# #               Config                   #
-# #                                        #
-# ##########################################
-# # Copy the WordPress configuration file
-
-# # COPY config/wp-config.php /var/www/html/wp-config.php <------
-
-# # Copy the themes files
-# COPY themes/ctlg-wpcom /var/www/html/wp-content/themes/ctlg-wpcom
-
-
-
-
-# ##########################################
-# #                                        #
-# #      Installation de Wordpress         #
-# #                                        #
-# ##########################################
-# # Set up database environment variables
-# ENV WORDPRESS_DB_HOST mengisen-projetdocker-mysql-server
-# ENV WORDPRESS_DB_USER wordpress
-# ENV WORDPRESS_DB_PASSWORD wordpress
-# ENV WORDPRESS_DB_NAME wordpress
-
-# # Install text editors
-# RUN apt-get install vim -y && \
-#     apt-get install nano -y
-
-# # Remove the default index.html file
-# # RUN rm -rf /var/www/html/index.html
-
-# EXPOSE 80
-
-# CMD ["apache2ctl", "-D", "FOREGROUND"]
